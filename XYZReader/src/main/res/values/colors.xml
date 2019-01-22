@@ -1,10 +1,12 @@
 <resources>
-    <color name="colorPrimary">#13161a</color>
-    <color name="colorPrimaryDark">#90beef</color>
-    <color name="colorAccent">#F9CF8B</color>
+    <color name="colorPrimary">#03a9f4</color>
+    <color name="colorPrimaryDark">#007ac1</color>
+    <color name="colorPrimaryLight">#67daff</color>
+    <color name="colorAccent">#ff9800</color>
 
     <color name="colorGrey">#222222</color>
     <color name="colorGreyLight">#414141</color>
+    <color name="colorWhite">#FFFFFF</color>
     <color name="detailBackgroundColor">#FFFFFF</color>
 
     <color name="colorError">#F57676</color>
