@@ -21,6 +21,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -35,6 +37,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
+import com.example.xyzreader.data.ArticleBodyAdapter;
 import com.example.xyzreader.data.ArticleLoader;
 
 /**
@@ -56,6 +59,8 @@ public class ArticleDetailFragment extends Fragment implements
     private NestedScrollView mScrollView;
     private CoordinatorLayout mCoordinatorLayout;
     private ColorDrawable mStatusBarColorDrawable;
+
+    private RecyclerView mRecyclerView;
 
     private int mTopInset;
     private View mPhotoContainerView;
@@ -202,10 +207,7 @@ public class ArticleDetailFragment extends Fragment implements
         TextView titleView = mRootView.findViewById(R.id.article_title);
         TextView bylineView = mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = mRootView.findViewById(R.id.article_body);
-
-
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        mRecyclerView = mRootView.findViewById(R.id.rv_article_body);
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -231,7 +233,10 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+
+            // use recyclerview for long text
+            initRecyclerView(mCursor.getString(ArticleLoader.Query.BODY));
+
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -256,8 +261,14 @@ public class ArticleDetailFragment extends Fragment implements
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
-            bodyView.setText("N/A");
         }
+    }
+
+    private void initRecyclerView(String body) {
+
+        mRecyclerView.setAdapter(new ArticleBodyAdapter(getContext(), body));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
